@@ -120,12 +120,14 @@
         .yazboz-ceza-section { padding-top: 10px; }
         .yazboz-ceza-section p { margin: 0 0 5px 0; text-align: center; font-size: 16px; height: 21px; }
 
-        /* YENİ: Checkbox için stil */
-        .okey-finish-check {
+        /* YENİ: Checkbox'ları yan yana getirmek için */
+        .special-finish-container {
             margin-top: 15px;
-            text-align: center;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
         }
-        .okey-finish-check label {
+        .special-finish-container label {
             font-weight: bold;
             font-size: 16px;
             cursor: pointer;
@@ -198,10 +200,13 @@
                     <label for="penalty" style="display: block; margin-top: 15px;">Kaybeden Çiftin Sayılar Toplamı:</label>
                     <input type="number" name="penalty_points" id="penalty" placeholder="Örn: 33" required min="0">
 
-                    <!-- YENİ: Okey atıldı checkbox'ı -->
-                    <div class="okey-finish-check">
+                    <!-- DEĞİŞTİ: Özel bitiş checkbox'ları yan yana -->
+                    <div class="special-finish-container">
                         <label>
                             <input type="checkbox" name="okey_atildi"> Okey atıldı !!
+                        </label>
+                        <label>
+                            <input type="checkbox" name="cifte_bitildi"> Çifte bitildi !
                         </label>
                     </div>
 
@@ -245,10 +250,10 @@
                 {% for result in game_data.results %}
                 <li>
                     <span class="col1">{{ result.el }}</span>
-                    <!-- DEĞİŞTİ: Yıldız sembolü eklendi -->
+                    <!-- DEĞİŞTİ: Özel bitiş sembolü mantığı güncellendi -->
                     <span class="col2" style="color: {{ OKEY_KATSAYILARI[result.okey].color }};">
                         {{ result.okey.title() }}
-                        {% if result.is_okey_finish %}★{% endif %}
+                        {% if result.finish_type == 'okey' %}★{% elif result.finish_type == 'cifte' %}&nbsp;(Ç){% endif %}
                     </span>
                     <span class="col3">{{ result.kazanan_takim }}</span>
                     <span class="col4">{{ result.kazanan_oyuncu }}</span>

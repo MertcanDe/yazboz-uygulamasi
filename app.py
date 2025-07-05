@@ -64,15 +64,16 @@ def start_game():
 
 @app.route('/save_hand', methods=['POST'])
 def save_hand():
-    """Her elin sonucunu kaydeden, okey atılma durumuna göre puanları hesaplayan fonksiyon."""
+    """Her elin sonucunu kaydeden, özel bitiş durumlarına göre puanları hesaplayan fonksiyon."""
     if 'current_hand' not in session or session['current_hand'] > 11:
         return redirect(url_for('index'))
 
     okey_color = request.form['okey_color']
     penalty_points = int(request.form['penalty_points'])
     winning_player = request.form['winning_player']
-    # YENİ: Checkbox'ın işaretli olup olmadığını kontrol et
+    # YENİ: Checkbox'ların durumunu kontrol et
     is_okey_finish = request.form.get('okey_atildi') is not None
+    is_cifte_finish = request.form.get('cifte_bitildi') is not None
 
     winner_team = None
     for team, players_in_team in session['teams'].items():
@@ -85,19 +86,27 @@ def save_hand():
 
     katsayi = OKEY_KATSAYILARI[okey_color]['katsayi']
 
-    # YENİ: Puanları okey atılma durumuna göre hesapla
-    if is_okey_finish:
+    # YENİ: Puanları özel bitiş durumuna göre hesapla
+    is_special_finish = is_okey_finish or is_cifte_finish
+    if is_special_finish:
         ceza = katsayi * penalty_points * 2
-        duser_puani = katsayi * 100  # Düşer puanı 10 ile çarpılır (katsayi * 10 * 10)
-        duser_katsayi_klasik = katsayi * 10  # Klasik yazbozda gösterilecek değer
+        duser_puani = katsayi * 100
+        duser_katsayi_klasik = katsayi * 10
     else:
         ceza = katsayi * penalty_points
         duser_puani = katsayi * 10
-        duser_katsayi_klasik = katsayi  # Klasik yazbozda gösterilecek normal katsayı
+        duser_katsayi_klasik = katsayi
 
     losing_team = session['team2_name'] if winner_team == session['team1_name'] else session['team1_name']
     session['scores'][losing_team] += ceza
     session['scores'][winner_team] -= duser_puani
+
+    # YENİ: Hangi türde bitiş yapıldığını sakla
+    finish_type = 'normal'
+    if is_okey_finish:
+        finish_type = 'okey'
+    elif is_cifte_finish:
+        finish_type = 'cifte'
 
     hand_result = {
         "el": session['current_hand'],
@@ -108,7 +117,7 @@ def save_hand():
         "duser": duser_puani,
         "sayilar": penalty_points,
         "ceza": ceza,
-        "is_okey_finish": is_okey_finish  # YENİ: Bu bilgiyi arayüzde kullanmak için sakla
+        "finish_type": finish_type  # DEĞİŞTİ: Arayüzde kullanılacak bitiş türü
     }
     session['results'].append(hand_result)
 
