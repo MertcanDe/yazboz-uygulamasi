@@ -64,13 +64,15 @@ def start_game():
 
 @app.route('/save_hand', methods=['POST'])
 def save_hand():
-    """Her elin sonucunu kaydeden, düşer puanını ve ham katsayıyı saklayan fonksiyon."""
+    """Her elin sonucunu kaydeden, okey atılma durumuna göre puanları hesaplayan fonksiyon."""
     if 'current_hand' not in session or session['current_hand'] > 11:
         return redirect(url_for('index'))
 
     okey_color = request.form['okey_color']
     penalty_points = int(request.form['penalty_points'])
     winning_player = request.form['winning_player']
+    # YENİ: Checkbox'ın işaretli olup olmadığını kontrol et
+    is_okey_finish = request.form.get('okey_atildi') is not None
 
     winner_team = None
     for team, players_in_team in session['teams'].items():
@@ -82,23 +84,31 @@ def save_hand():
         return "Hata: Oyuncu bir takıma ait değil.", 400
 
     katsayi = OKEY_KATSAYILARI[okey_color]['katsayi']
-    ceza = katsayi * penalty_points
-    duser_puani = katsayi * 10
+
+    # YENİ: Puanları okey atılma durumuna göre hesapla
+    if is_okey_finish:
+        ceza = katsayi * penalty_points * 2
+        duser_puani = katsayi * 100  # Düşer puanı 10 ile çarpılır (katsayi * 10 * 10)
+        duser_katsayi_klasik = katsayi * 10  # Klasik yazbozda gösterilecek değer
+    else:
+        ceza = katsayi * penalty_points
+        duser_puani = katsayi * 10
+        duser_katsayi_klasik = katsayi  # Klasik yazbozda gösterilecek normal katsayı
 
     losing_team = session['team2_name'] if winner_team == session['team1_name'] else session['team1_name']
     session['scores'][losing_team] += ceza
     session['scores'][winner_team] -= duser_puani
 
-    # Sonucu listeye ekle
     hand_result = {
         "el": session['current_hand'],
         "okey": okey_color,
         "kazanan_takim": winner_team,
         "kazanan_oyuncu": winning_player,
-        "duser_katsayi": katsayi,  # YENİ: Ham katsayıyı klasik yazboz için saklıyoruz
+        "duser_katsayi": duser_katsayi_klasik,
         "duser": duser_puani,
         "sayilar": penalty_points,
-        "ceza": ceza
+        "ceza": ceza,
+        "is_okey_finish": is_okey_finish  # YENİ: Bu bilgiyi arayüzde kullanmak için sakla
     }
     session['results'].append(hand_result)
 

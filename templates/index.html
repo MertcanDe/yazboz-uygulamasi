@@ -111,50 +111,24 @@
         .results-list .col6 { width: 15%; }
         .results-list .col7 { width: 15%; text-align: right;}
 
-        .yazboz-sheet {
-            display: flex;
-            background-color: #fdf6e3;
-            color: #333;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-family: 'Courier New', monospace;
-            min-height: 400px; /* DEĞİŞTİ: Yükseklik artırıldı */
-        }
-        .yazboz-column {
-            flex: 1;
-            padding: 10px;
-        }
-        .yazboz-column:first-child {
-            border-right: 2px solid #555;
-        }
-        .yazboz-header {
+        .yazboz-sheet { display: flex; background-color: #fdf6e3; color: #333; border: 1px solid #ccc; border-radius: 5px; font-family: 'Courier New', monospace; min-height: 400px; }
+        .yazboz-column { flex: 1; padding: 10px; }
+        .yazboz-column:first-child { border-right: 2px solid #555; }
+        .yazboz-header { text-align: center; font-weight: bold; font-size: 18px; padding-bottom: 10px; border-bottom: 2px solid #555; min-height: 25px; }
+        .yazboz-duser-section { padding: 10px 0; min-height: 40px; display: flex; flex-wrap: wrap; gap: 8px; border-bottom: 1px solid #ccc; }
+        .yazboz-duser-section span { font-weight: bold; font-size: 16px; }
+        .yazboz-ceza-section { padding-top: 10px; }
+        .yazboz-ceza-section p { margin: 0 0 5px 0; text-align: center; font-size: 16px; height: 21px; }
+
+        /* YENİ: Checkbox için stil */
+        .okey-finish-check {
+            margin-top: 15px;
             text-align: center;
-            font-weight: bold;
-            font-size: 18px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #555;
-            min-height: 25px;
         }
-        .yazboz-duser-section {
-            padding: 10px 0;
-            min-height: 40px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            border-bottom: 1px solid #ccc;
-        }
-        .yazboz-duser-section span {
+        .okey-finish-check label {
             font-weight: bold;
             font-size: 16px;
-        }
-        .yazboz-ceza-section {
-            padding-top: 10px;
-        }
-        .yazboz-ceza-section p {
-            margin: 0 0 5px 0;
-            text-align: center;
-            font-size: 16px;
-            height: 21px; /* Sabit yükseklik ile hizalama sağlanır */
+            cursor: pointer;
         }
     </style>
 </head>
@@ -223,12 +197,19 @@
                     </div>
                     <label for="penalty" style="display: block; margin-top: 15px;">Kaybeden Çiftin Sayılar Toplamı:</label>
                     <input type="number" name="penalty_points" id="penalty" placeholder="Örn: 33" required min="0">
-                    <button type="submit" class="btn">Eli Kaydet</button>
+
+                    <!-- YENİ: Okey atıldı checkbox'ı -->
+                    <div class="okey-finish-check">
+                        <label>
+                            <input type="checkbox" name="okey_atildi"> Okey atıldı !!
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn" style="margin-top: 15px;">Eli Kaydet</button>
                 </form>
             {% endif %}
         </div>
 
-        <!-- DEĞİŞTİ: Bölümlerin sırası değiştirildi -->
         <div class="card">
             <h2>Klasik Yazboz</h2>
             <div class="yazboz-sheet">
@@ -264,7 +245,11 @@
                 {% for result in game_data.results %}
                 <li>
                     <span class="col1">{{ result.el }}</span>
-                    <span class="col2" style="color: {{ OKEY_KATSAYILARI[result.okey].color }};">{{ result.okey.title() }}</span>
+                    <!-- DEĞİŞTİ: Yıldız sembolü eklendi -->
+                    <span class="col2" style="color: {{ OKEY_KATSAYILARI[result.okey].color }};">
+                        {{ result.okey.title() }}
+                        {% if result.is_okey_finish %}★{% endif %}
+                    </span>
                     <span class="col3">{{ result.kazanan_takim }}</span>
                     <span class="col4">{{ result.kazanan_oyuncu }}</span>
                     <span class="col5">-{{ result.duser }}</span>
