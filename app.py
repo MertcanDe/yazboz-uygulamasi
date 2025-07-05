@@ -19,23 +19,18 @@ def index():
     """
     Ana sayfa. Oyuncu isimleri girilmediyse kurulumu, girildiyse oyun ekranını gösterir.
     """
-    # Eğer session'da oyuncu bilgisi yoksa, başlangıç ekranını göster
     if 'players' not in session:
         return render_template('index.html', setup_mode=True)
 
-    # Okey renklerini HTML'de sıralı göstermek için katsayılarına göre sırala
     sorted_okey_data = sorted(OKEY_KATSAYILARI.items(), key=lambda item: item[1]['katsayi'])
-
-    # Oyunun bitip bitmediğini kontrol et
     game_over = session.get('current_hand', 1) > 11
 
-    # Oyuncu bilgisi varsa, oyun ekranını render et ve sıralı okey verisini gönder
     return render_template('index.html',
                            setup_mode=False,
                            game_data=session,
                            game_over=game_over,
                            okey_data_sorted=sorted_okey_data,
-                           OKEY_KATSAYILARI=OKEY_KATSAYILARI)  # Skor tablosunda renklendirme için
+                           OKEY_KATSAYILARI=OKEY_KATSAYILARI)
 
 
 @app.route('/start_game', methods=['POST'])
@@ -45,23 +40,19 @@ def start_game():
         request.form['player1'], request.form['player2'],
         request.form['player3'], request.form['player4']
     ]
-
     team1_name_from_form = request.form['team1_name']
     team2_name_from_form = request.form['team2_name']
 
-    # Eğer bir isim boşsa, kurulum ekranına geri dön
     if any(name == "" for name in players):
         return redirect(url_for('index'))
 
-    # Session'da oyun verilerini sakla
     session['team1_name'] = team1_name_from_form if team1_name_from_form else "Takım A"
     session['team2_name'] = team2_name_from_form if team2_name_from_form else "Takım B"
 
     session['players'] = players
-    # Takımları ve oyuncularını bir sözlük yapısında sakla
     session['teams'] = {
-        session['team1_name']: [players[2], players[0]],  # Alt ve Üst oyuncular
-        session['team2_name']: [players[3], players[1]]  # Sol ve Sağ oyuncular
+        session['team1_name']: [players[2], players[0]],
+        session['team2_name']: [players[3], players[1]]
     }
 
     session['scores'] = {session['team1_name']: 0, session['team2_name']: 0}
@@ -73,16 +64,14 @@ def start_game():
 
 @app.route('/save_hand', methods=['POST'])
 def save_hand():
-    """Her elin sonucunu kaydeden ve kazanan takımı otomatik bulan fonksiyon."""
+    """Her elin sonucunu kaydeden, düşer puanını hesaplayan fonksiyon."""
     if 'current_hand' not in session or session['current_hand'] > 11:
         return redirect(url_for('index'))
 
-    # Formdan gelen verileri al
     okey_color = request.form['okey_color']
     penalty_points = int(request.form['penalty_points'])
     winning_player = request.form['winning_player']
 
-    # Kazanan oyuncuya göre kazanan takımı bul
     winner_team = None
     for team, players_in_team in session['teams'].items():
         if winning_player in players_in_team:
@@ -92,13 +81,19 @@ def save_hand():
     if not winner_team:
         return "Hata: Oyuncu bir takıma ait değil.", 400
 
-    # Ceza puanını hesapla
     katsayi = OKEY_KATSAYILARI[okey_color]['katsayi']
+
+    # Kaybeden takımın yediği ceza
     ceza = katsayi * penalty_points
+
+    # YENİ: Kazanan takımın aldığı "düşer" puanı
+    duser_puani = katsayi * 10
 
     # Skoru güncelle
     losing_team = session['team2_name'] if winner_team == session['team1_name'] else session['team1_name']
     session['scores'][losing_team] += ceza
+    # YENİ: Düşer puanını kazanan takımın cezasından çıkar
+    session['scores'][winner_team] -= duser_puani
 
     # Sonucu listeye ekle
     hand_result = {
@@ -106,12 +101,12 @@ def save_hand():
         "okey": okey_color,
         "kazanan_takim": winner_team,
         "kazanan_oyuncu": winning_player,
+        "duser": duser_puani,  # YENİ
         "sayilar": penalty_points,
         "ceza": ceza
     }
     session['results'].append(hand_result)
 
-    # Sonraki ele geç
     session['current_hand'] += 1
     session.modified = True
 
@@ -126,5 +121,4 @@ def reset():
 
 
 if __name__ == '__main__':
-    # '0.0.0.0' adresi, uygulamanın ağdaki diğer cihazlar tarafından erişilebilir olmasını sağlar.
     app.run(host='0.0.0.0', port=5000, debug=True)

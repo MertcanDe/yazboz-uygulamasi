@@ -70,8 +70,8 @@
         .rack { background-color: #8B4513; border-radius: 6px; }
         .rack-h { width: 140px; height: 30px; }
         .rack-v { width: 30px; height: 120px; }
-        .player-top { grid-column: 2; grid-row: 1; text-align: center; }
-        .player-bottom { grid-column: 2; grid-row: 3; text-align: center; }
+        .player-top { grid-column: 2; grid-row: 1; }
+        .player-bottom { grid-column: 2; grid-row: 3; }
         .player-left { grid-column: 1; grid-row: 2; }
         .player-right { grid-column: 3; grid-row: 2; }
 
@@ -102,7 +102,6 @@
         .setup-table .player-top .rack-h { margin-top: 8px; }
         .setup-table .player-bottom .rack-h { margin-bottom: 8px; }
 
-        /* YENİ: Oyun ekranındaki masa için özel Flexbox stilleri */
         .game-screen-table .player-left,
         .game-screen-table .player-right {
             display: flex;
@@ -129,12 +128,15 @@
         .results-list li { background: #34495E; padding: 8px; border-radius: 3px; margin-bottom: 5px; display: flex; justify-content: space-between; flex-wrap: wrap;}
         .results-list .header { font-weight: bold; background: none; }
         .results-list span { text-align: left; }
+
+        /* DEĞİŞTİ: Yeni sütun için genişlikler ayarlandı */
         .results-list .col1 { width: 5%; }
         .results-list .col2 { width: 15%; font-weight: bold; }
-        .results-list .col3 { width: 25%; }
-        .results-list .col4 { width: 25%; }
-        .results-list .col5 { width: 15%; }
-        .results-list .col6 { width: 15%; text-align: right;}
+        .results-list .col3 { width: 20%; }
+        .results-list .col4 { width: 20%; }
+        .results-list .col5 { width: 10%; color: #27AE60; font-weight: bold; } /* Düşer */
+        .results-list .col6 { width: 15%; } /* Sayılar */
+        .results-list .col7 { width: 15%; text-align: right;} /* Ceza */
     </style>
 </head>
 <body>
@@ -177,25 +179,11 @@
         </div>
         {% else %}
         <!-- Oyun Ekranı -->
-        <!-- DEĞİŞTİ: Oyun ekranındaki masaya özel bir class eklendi -->
         <div class="okey-table game-screen-table">
-            <div class="player-top">
-                <div class="player-name">{{ game_data.players[0] }}</div>
-                <div class="rack rack-h"></div>
-            </div>
-            <div class="player-left">
-                <div class="player-name">{{ game_data.players[3] }}</div>
-                <div class="rack rack-v"></div>
-            </div>
-            <div class="player-right">
-                <!-- DEĞİŞTİ: Sağ oyuncu için rack ve isim sırası değiştirildi -->
-                <div class="rack rack-v"></div>
-                <div class="player-name">{{ game_data.players[1] }}</div>
-            </div>
-            <div class="player-bottom">
-                <div class="rack rack-h"></div>
-                <div class="player-name">{{ game_data.players[2] }}</div>
-            </div>
+            <div class="player-top"><div class="player-name">{{ game_data.players[0] }}</div><div class="rack rack-h"></div></div>
+            <div class="player-left"><div class="player-name">{{ game_data.players[3] }}</div><div class="rack rack-v"></div></div>
+            <div class="player-right"><div class="rack rack-v"></div><div class="player-name">{{ game_data.players[1] }}</div></div>
+            <div class="player-bottom"><div class="rack rack-h"></div><div class="player-name">{{ game_data.players[2] }}</div></div>
         </div>
 
         <div class="card">
@@ -241,18 +229,22 @@
         <div class="card">
             <h2>Skor Tablosu</h2>
             <ul class="results-list">
+                <!-- DEĞİŞTİ: Tablo başlıkları güncellendi -->
                 <li class="header">
                     <span class="col1">El</span><span class="col2">Okey</span><span class="col3">Kazanan Takım</span>
-                    <span class="col4">Kazanan Oyuncu</span><span class="col5">Sayılar</span><span class="col6">Ceza</span>
+                    <span class="col4">Kazanan Oyuncu</span><span class="col5">Düşer</span>
+                    <span class="col6">Sayılar</span><span class="col7">Ceza</span>
                 </li>
+                <!-- DEĞİŞTİ: Sonuçlar yeni yapıya göre gösteriliyor -->
                 {% for result in game_data.results %}
                 <li>
                     <span class="col1">{{ result.el }}</span>
                     <span class="col2" style="color: {{ OKEY_KATSAYILARI[result.okey].color }};">{{ result.okey.title() }}</span>
                     <span class="col3">{{ result.kazanan_takim }}</span>
                     <span class="col4">{{ result.kazanan_oyuncu }}</span>
-                    <span class="col5">{{ result.sayilar }}</span>
-                    <span class="col6">{{ result.ceza }}</span>
+                    <span class="col5">-{{ result.duser }}</span>
+                    <span class="col6">{{ result.sayilar }}</span>
+                    <span class="col7">+{{ result.ceza }}</span>
                 </li>
                 {% endfor %}
             </ul>
