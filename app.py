@@ -64,7 +64,7 @@ def start_game():
 
 @app.route('/save_hand', methods=['POST'])
 def save_hand():
-    """Her elin sonucunu kaydeden, düşer puanını hesaplayan fonksiyon."""
+    """Her elin sonucunu kaydeden, düşer puanını ve ham katsayıyı saklayan fonksiyon."""
     if 'current_hand' not in session or session['current_hand'] > 11:
         return redirect(url_for('index'))
 
@@ -82,17 +82,11 @@ def save_hand():
         return "Hata: Oyuncu bir takıma ait değil.", 400
 
     katsayi = OKEY_KATSAYILARI[okey_color]['katsayi']
-
-    # Kaybeden takımın yediği ceza
     ceza = katsayi * penalty_points
-
-    # YENİ: Kazanan takımın aldığı "düşer" puanı
     duser_puani = katsayi * 10
 
-    # Skoru güncelle
     losing_team = session['team2_name'] if winner_team == session['team1_name'] else session['team1_name']
     session['scores'][losing_team] += ceza
-    # YENİ: Düşer puanını kazanan takımın cezasından çıkar
     session['scores'][winner_team] -= duser_puani
 
     # Sonucu listeye ekle
@@ -101,7 +95,8 @@ def save_hand():
         "okey": okey_color,
         "kazanan_takim": winner_team,
         "kazanan_oyuncu": winning_player,
-        "duser": duser_puani,  # YENİ
+        "duser_katsayi": katsayi,  # YENİ: Ham katsayıyı klasik yazboz için saklıyoruz
+        "duser": duser_puani,
         "sayilar": penalty_points,
         "ceza": ceza
     }

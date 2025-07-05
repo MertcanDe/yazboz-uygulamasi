@@ -76,42 +76,17 @@
         .player-right { grid-column: 3; grid-row: 2; }
 
         .setup-table .player-top,
-        .setup-table .player-bottom {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+        .setup-table .player-bottom { display: flex; flex-direction: column; align-items: center; }
         .setup-table .player-left,
-        .setup-table .player-right {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .setup-input {
-            background-color: transparent;
-            border: none;
-            border-bottom: 2px solid #566573;
-            border-radius: 0;
-            text-align: center;
-            font-weight: bold;
-            font-size: 16px;
-            padding: 5px;
-            width: 140px;
-            margin: 0;
-        }
+        .setup-table .player-right { display: flex; align-items: center; gap: 10px; }
+        .setup-input { background-color: transparent; border: none; border-bottom: 2px solid #566573; border-radius: 0; text-align: center; font-weight: bold; font-size: 16px; padding: 5px; width: 140px; margin: 0; }
         .setup-table .player-top .rack-h { margin-top: 8px; }
         .setup-table .player-bottom .rack-h { margin-bottom: 8px; }
 
         .game-screen-table .player-left,
-        .game-screen-table .player-right {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+        .game-screen-table .player-right { display: flex; align-items: center; gap: 10px; }
         .game-screen-table .player-top,
-        .game-screen-table .player-bottom {
-            text-align: center;
-        }
+        .game-screen-table .player-bottom { text-align: center; }
         .game-screen-table .player-top .rack-h { margin-top: 8px; }
         .game-screen-table .player-bottom .rack-h { margin-bottom: 8px; }
 
@@ -128,15 +103,59 @@
         .results-list li { background: #34495E; padding: 8px; border-radius: 3px; margin-bottom: 5px; display: flex; justify-content: space-between; flex-wrap: wrap;}
         .results-list .header { font-weight: bold; background: none; }
         .results-list span { text-align: left; }
-
-        /* DEĞİŞTİ: Yeni sütun için genişlikler ayarlandı */
         .results-list .col1 { width: 5%; }
         .results-list .col2 { width: 15%; font-weight: bold; }
         .results-list .col3 { width: 20%; }
         .results-list .col4 { width: 20%; }
-        .results-list .col5 { width: 10%; color: #27AE60; font-weight: bold; } /* Düşer */
-        .results-list .col6 { width: 15%; } /* Sayılar */
-        .results-list .col7 { width: 15%; text-align: right;} /* Ceza */
+        .results-list .col5 { width: 10%; color: #27AE60; font-weight: bold; }
+        .results-list .col6 { width: 15%; }
+        .results-list .col7 { width: 15%; text-align: right;}
+
+        .yazboz-sheet {
+            display: flex;
+            background-color: #fdf6e3;
+            color: #333;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            min-height: 400px; /* DEĞİŞTİ: Yükseklik artırıldı */
+        }
+        .yazboz-column {
+            flex: 1;
+            padding: 10px;
+        }
+        .yazboz-column:first-child {
+            border-right: 2px solid #555;
+        }
+        .yazboz-header {
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #555;
+            min-height: 25px;
+        }
+        .yazboz-duser-section {
+            padding: 10px 0;
+            min-height: 40px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            border-bottom: 1px solid #ccc;
+        }
+        .yazboz-duser-section span {
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .yazboz-ceza-section {
+            padding-top: 10px;
+        }
+        .yazboz-ceza-section p {
+            margin: 0 0 5px 0;
+            text-align: center;
+            font-size: 16px;
+            height: 21px; /* Sabit yükseklik ile hizalama sağlanır */
+        }
     </style>
 </head>
 <body>
@@ -146,34 +165,18 @@
             <h1>Okey Yazboz Kurulum</h1>
             <form action="{{ url_for('start_game') }}" method="post">
                 <div class="okey-table setup-table">
-                    <div class="player-top">
-                        <input type="text" name="player1" id="player1_input" class="setup-input" placeholder="1. Oyuncu" required>
-                        <div class="rack rack-h"></div>
-                    </div>
-                    <div class="player-left">
-                        <input type="text" name="player4" id="player4_input" class="setup-input" placeholder="4. Oyuncu" required>
-                        <div class="rack rack-v"></div>
-                    </div>
-                    <div class="player-right">
-                        <div class="rack rack-v"></div>
-                        <input type="text" name="player2" id="player2_input" class="setup-input" placeholder="2. Oyuncu" required>
-                    </div>
-                    <div class="player-bottom">
-                        <div class="rack rack-h"></div>
-                        <input type="text" name="player3" id="player3_input" class="setup-input" placeholder="3. Oyuncu" required>
-                    </div>
+                    <div class="player-top"><input type="text" name="player1" id="player1_input" class="setup-input" placeholder="1. Oyuncu" required><div class="rack rack-h"></div></div>
+                    <div class="player-left"><input type="text" name="player4" id="player4_input" class="setup-input" placeholder="4. Oyuncu" required><div class="rack rack-v"></div></div>
+                    <div class="player-right"><div class="rack rack-v"></div><input type="text" name="player2" id="player2_input" class="setup-input" placeholder="2. Oyuncu" required></div>
+                    <div class="player-bottom"><div class="rack rack-h"></div><input type="text" name="player3" id="player3_input" class="setup-input" placeholder="3. Oyuncu" required></div>
                 </div>
-
                 <hr style="border-color: #34495E; margin: 20px 0;">
-
                 <div class="team-setup">
                     <label for="team1_name_input" id="team1_label">1. Takım Adı (Alt - Üst):</label>
                     <input type="text" name="team1_name" id="team1_name_input" placeholder="(Boş bırakılırsa: Takım A)">
-
                     <label for="team2_name_input" id="team2_label">2. Takım Adı (Sol - Sağ):</label>
                     <input type="text" name="team2_name" id="team2_name_input" placeholder="(Boş bırakılırsa: Takım B)">
                 </div>
-
                 <button type="submit" class="btn">Oyuna Başla</button>
             </form>
         </div>
@@ -185,7 +188,6 @@
             <div class="player-right"><div class="rack rack-v"></div><div class="player-name">{{ game_data.players[1] }}</div></div>
             <div class="player-bottom"><div class="rack rack-h"></div><div class="player-name">{{ game_data.players[2] }}</div></div>
         </div>
-
         <div class="card">
             {% if game_over %}
                 <h2>Oyun Bitti!</h2>
@@ -226,16 +228,39 @@
             {% endif %}
         </div>
 
+        <!-- DEĞİŞTİ: Bölümlerin sırası değiştirildi -->
+        <div class="card">
+            <h2>Klasik Yazboz</h2>
+            <div class="yazboz-sheet">
+                <div class="yazboz-column">
+                    <div class="yazboz-header">{{ game_data.team1_name }}</div>
+                    <div class="yazboz-duser-section">
+                        {% for result in game_data.results %}{% if result.kazanan_takim == game_data.team1_name %}<span>{{ result.duser_katsayi }}</span>{% endif %}{% endfor %}
+                    </div>
+                    <div class="yazboz-ceza-section">
+                        {% for result in game_data.results %}{% if result.kazanan_takim == game_data.team1_name %}<p>—</p>{% else %}<p>{{ result.ceza }}</p>{% endif %}{% endfor %}
+                    </div>
+                </div>
+                <div class="yazboz-column">
+                    <div class="yazboz-header">{{ game_data.team2_name }}</div>
+                    <div class="yazboz-duser-section">
+                        {% for result in game_data.results %}{% if result.kazanan_takim == game_data.team2_name %}<span>{{ result.duser_katsayi }}</span>{% endif %}{% endfor %}
+                    </div>
+                    <div class="yazboz-ceza-section">
+                        {% for result in game_data.results %}{% if result.kazanan_takim == game_data.team2_name %}<p>—</p>{% else %}<p>{{ result.ceza }}</p>{% endif %}{% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="card">
             <h2>Skor Tablosu</h2>
             <ul class="results-list">
-                <!-- DEĞİŞTİ: Tablo başlıkları güncellendi -->
                 <li class="header">
                     <span class="col1">El</span><span class="col2">Okey</span><span class="col3">Kazanan Takım</span>
                     <span class="col4">Kazanan Oyuncu</span><span class="col5">Düşer</span>
                     <span class="col6">Sayılar</span><span class="col7">Ceza</span>
                 </li>
-                <!-- DEĞİŞTİ: Sonuçlar yeni yapıya göre gösteriliyor -->
                 {% for result in game_data.results %}
                 <li>
                     <span class="col1">{{ result.el }}</span>
@@ -265,27 +290,17 @@
             const p2_input = document.getElementById('player2_input');
             const p3_input = document.getElementById('player3_input');
             const p4_input = document.getElementById('player4_input');
-
             const team1_label = document.getElementById('team1_label');
             const team2_label = document.getElementById('team2_label');
-
             function updateTeamLabels() {
                 const p1 = p1_input.value.trim();
                 const p2 = p2_input.value.trim();
                 const p3 = p3_input.value.trim();
                 const p4 = p4_input.value.trim();
-
-                if (p3 && p1) {
-                    team1_label.textContent = `${p3} - ${p1} Takımının Adı:`;
-                } else {
-                    team1_label.textContent = '1. Takım Adı (Alt - Üst):';
-                }
-
-                if (p4 && p2) {
-                    team2_label.textContent = `${p4} - ${p2} Takımının Adı:`;
-                } else {
-                    team2_label.textContent = '2. Takım Adı (Sol - Sağ):';
-                }
+                if (p3 && p1) { team1_label.textContent = `${p3} - ${p1} Takımının Adı:`; }
+                else { team1_label.textContent = '1. Takım Adı (Alt - Üst):'; }
+                if (p4 && p2) { team2_label.textContent = `${p4} - ${p2} Takımının Adı:`; }
+                else { team2_label.textContent = '2. Takım Adı (Sol - Sağ):'; }
             }
             [p1_input, p2_input, p3_input, p4_input].forEach(input => {
                 input.addEventListener('input', updateTeamLabels);
