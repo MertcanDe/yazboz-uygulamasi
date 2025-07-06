@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Düzenle</title>
+    <!-- Stil kodları ana sayfadan kopyalandı -->
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; background-color: #1E8449; color: #ecf0f1; margin: 0; padding: 15px; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 600px; }
+        .card { background-color: #2C3E50; border-radius: 10px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+        h1, h2, h3 { text-align: center; color: #fff; margin-top: 0; }
+        input[type="text"], input[type="number"] { width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 5px; border: 1px solid #34495E; background-color: #34495E; color: #fff; box-sizing: border-box; }
+        .btn { width: 100%; padding: 12px; border: none; border-radius: 5px; background-color: #27AE60; color: white; font-size: 16px; font-weight: bold; cursor: pointer; transition: background-color 0.3s; }
+        .btn-cancel { background-color: #7f8c8d; margin-top: 10px; }
+        .btn-cancel:hover { background-color: #95a5a6; }
+        .controls-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .control-group { background: #34495E; padding: 10px; border-radius: 5px; }
+        .control-group h3 { font-size: 14px; margin-bottom: 10px; }
+        .radio-group label { display: block; margin-bottom: 5px; cursor: pointer; }
+        .special-finish-container { margin-top: 15px; display: flex; justify-content: space-around; align-items: center; }
+        .special-finish-container label { font-weight: bold; font-size: 16px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h2>{{ hand.el }}. Eli Düzenle</h2>
+            <form action="{{ url_for('update_hand', hand_index=hand_index) }}" method="post">
+                <div class="controls-grid">
+                    <div class="control-group">
+                        <h3>Okey Rengi</h3>
+                        <div class="radio-group">
+                            {% for color_name, data in okey_data_sorted %}
+                            <label style="color: {{ data.color }}; font-weight: bold;">
+                                <!-- Seçili olanı 'checked' ile işaretle -->
+                                <input type="radio" name="okey_color" value="{{ color_name }}" {% if hand.okey == color_name %}checked{% endif %} required> {{ color_name.title() }} ({{ data.katsayi }})
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <h3>Eli Bitiren Oyuncu</h3>
+                        <div class="radio-group">
+                            {% for player in game_data.players %}
+                            <label>
+                                <!-- Seçili olanı 'checked' ile işaretle -->
+                                <input type="radio" name="winning_player" value="{{ player }}" {% if hand.kazanan_oyuncu == player %}checked{% endif %} required> {{ player }}
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <label for="penalty" style="display: block; margin-top: 15px;">Kaybeden Çiftin Sayılar Toplamı:</label>
+                <!-- Mevcut değeri 'value' ile doldur -->
+                <input type="number" name="penalty_points" id="penalty" value="{{ hand.sayilar }}" required min="0">
+
+                <div class="special-finish-container">
+                    <label>
+                        <!-- Seçili olanı 'checked' ile işaretle -->
+                        <input type="checkbox" name="okey_atildi" {% if hand.finish_type == 'okey' %}checked{% endif %}> Okey atıldı !!
+                    </label>
+                    <label>
+                        <!-- Seçili olanı 'checked' ile işaretle -->
+                        <input type="checkbox" name="cifte_bitildi" {% if hand.finish_type == 'cifte' %}checked{% endif %}> Çifte bitildi !
+                    </label>
+                </div>
+
+                <button type="submit" class="btn" style="margin-top: 15px;">Değişiklikleri Kaydet</button>
+            </form>
+            <a href="{{ url_for('index') }}"><button class="btn btn-cancel">İptal</button></a>
+        </div>
+    </div>
+</body>
+</html>

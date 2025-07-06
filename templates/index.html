@@ -5,67 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Okey Yazboz</title>
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-            background-color: #1E8449;
-            color: #ecf0f1;
-            margin: 0;
-            padding: 15px;
-            display: flex;
-            justify-content: center;
-        }
-        .container {
-            width: 100%;
-            max-width: 600px;
-        }
-        .card {
-            background-color: #2C3E50;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-        h1, h2, h3 {
-            text-align: center;
-            color: #fff;
-            margin-top: 0;
-        }
-        input[type="text"], input[type="number"] {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-            border: 1px solid #34495E;
-            background-color: #34495E;
-            color: #fff;
-            box-sizing: border-box;
-        }
-        .btn {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 5px;
-            background-color: #27AE60;
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; background-color: #1E8449; color: #ecf0f1; margin: 0; padding: 15px; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 600px; }
+        .card { background-color: #2C3E50; border-radius: 10px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+        h1, h2, h3 { text-align: center; color: #fff; margin-top: 0; }
+        input[type="text"], input[type="number"] { width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 5px; border: 1px solid #34495E; background-color: #34495E; color: #fff; box-sizing: border-box; }
+        .btn { width: 100%; padding: 12px; border: none; border-radius: 5px; background-color: #27AE60; color: white; font-size: 16px; font-weight: bold; cursor: pointer; transition: background-color 0.3s; }
         .btn:hover { background-color: #2ECC71; }
         .btn-reset { background-color: #E74C3C; }
         .btn-reset:hover { background-color: #C0392B; }
-
-        .okey-table {
-            display: grid;
-            grid-template-columns: 1fr auto 1fr;
-            grid-template-rows: auto 1fr auto;
-            align-items: center;
-            justify-items: center;
-            gap: 10px;
-            margin-bottom: 20px;
-            padding: 20px 0;
-        }
+        .okey-table { display: grid; grid-template-columns: 1fr auto 1fr; grid-template-rows: auto 1fr auto; align-items: center; justify-items: center; gap: 10px; margin-bottom: 20px; padding: 20px 0; }
         .player-name { font-weight: bold; }
         .rack { background-color: #8B4513; border-radius: 6px; }
         .rack-h { width: 140px; height: 30px; }
@@ -74,43 +23,33 @@
         .player-bottom { grid-column: 2; grid-row: 3; }
         .player-left { grid-column: 1; grid-row: 2; }
         .player-right { grid-column: 3; grid-row: 2; }
-
-        .setup-table .player-top,
-        .setup-table .player-bottom { display: flex; flex-direction: column; align-items: center; }
-        .setup-table .player-left,
-        .setup-table .player-right { display: flex; align-items: center; gap: 10px; }
+        .setup-table .player-top, .setup-table .player-bottom { display: flex; flex-direction: column; align-items: center; }
+        .setup-table .player-left, .setup-table .player-right { display: flex; align-items: center; gap: 10px; }
         .setup-input { background-color: transparent; border: none; border-bottom: 2px solid #566573; border-radius: 0; text-align: center; font-weight: bold; font-size: 16px; padding: 5px; width: 140px; margin: 0; }
         .setup-table .player-top .rack-h { margin-top: 8px; }
         .setup-table .player-bottom .rack-h { margin-bottom: 8px; }
-
-        .game-screen-table .player-left,
-        .game-screen-table .player-right { display: flex; align-items: center; gap: 10px; }
-        .game-screen-table .player-top,
-        .game-screen-table .player-bottom { text-align: center; }
+        .game-screen-table .player-left, .game-screen-table .player-right { display: flex; align-items: center; gap: 10px; }
+        .game-screen-table .player-top, .game-screen-table .player-bottom { text-align: center; }
         .game-screen-table .player-top .rack-h { margin-top: 8px; }
         .game-screen-table .player-bottom .rack-h { margin-bottom: 8px; }
-
         .setup-input::placeholder { color: #95A5A6; font-weight: normal; }
         .team-setup { margin-top: 20px; }
         .team-setup label { display: block; margin-bottom: 5px; color: #BDC3C7; }
-
         .controls-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .control-group { background: #34495E; padding: 10px; border-radius: 5px; }
         .control-group h3 { font-size: 14px; margin-bottom: 10px; }
         .radio-group label { display: block; margin-bottom: 5px; cursor: pointer; }
-
         .results-list { list-style: none; padding: 0; font-family: 'Courier New', Courier, monospace; font-size: 12px; }
-        .results-list li { background: #34495E; padding: 8px; border-radius: 3px; margin-bottom: 5px; display: flex; justify-content: space-between; flex-wrap: wrap;}
+        .results-list li { background: #34495E; padding: 8px; border-radius: 3px; margin-bottom: 5px; display: flex; justify-content: space-between; flex-wrap: wrap; align-items: center; }
         .results-list .header { font-weight: bold; background: none; }
         .results-list span { text-align: left; }
-        .results-list .col1 { width: 5%; }
+        .results-list .col1 { width: 10%; } /* Genişletildi */
         .results-list .col2 { width: 15%; font-weight: bold; }
         .results-list .col3 { width: 20%; }
         .results-list .col4 { width: 20%; }
         .results-list .col5 { width: 10%; color: #27AE60; font-weight: bold; }
-        .results-list .col6 { width: 15%; }
+        .results-list .col6 { width: 10%; } /* Daraltıldı */
         .results-list .col7 { width: 15%; text-align: right;}
-
         .yazboz-sheet { display: flex; background-color: #fdf6e3; color: #333; border: 1px solid #ccc; border-radius: 5px; font-family: 'Courier New', monospace; min-height: 400px; }
         .yazboz-column { flex: 1; padding: 10px; }
         .yazboz-column:first-child { border-right: 2px solid #555; }
@@ -119,24 +58,15 @@
         .yazboz-duser-section span { font-weight: bold; font-size: 16px; }
         .yazboz-ceza-section { padding-top: 10px; }
         .yazboz-ceza-section p { margin: 0 0 5px 0; text-align: center; font-size: 16px; height: 21px; }
-
-        /* YENİ: Checkbox'ları yan yana getirmek için */
-        .special-finish-container {
-            margin-top: 15px;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-        }
-        .special-finish-container label {
-            font-weight: bold;
-            font-size: 16px;
-            cursor: pointer;
-        }
+        .special-finish-container { margin-top: 15px; display: flex; justify-content: space-around; align-items: center; }
+        .special-finish-container label { font-weight: bold; font-size: 16px; cursor: pointer; }
+        .edit-link { text-decoration: none; color: #F1C40F; margin-right: 5px; }
     </style>
 </head>
 <body>
     <div class="container">
         {% if setup_mode %}
+        <!-- Kurulum Ekranı (Değişiklik yok) -->
         <div class="card">
             <h1>Okey Yazboz Kurulum</h1>
             <form action="{{ url_for('start_game') }}" method="post">
@@ -178,67 +108,31 @@
                 <h2>{{ game_data.current_hand }}. El</h2>
                 <form action="{{ url_for('save_hand') }}" method="post">
                     <div class="controls-grid">
-                        <div class="control-group">
-                            <h3>Okey Rengi</h3>
-                            <div class="radio-group">
-                                {% for color_name, data in okey_data_sorted %}
-                                <label style="color: {{ data.color }}; font-weight: bold;">
-                                    <input type="radio" name="okey_color" value="{{ color_name }}" required> {{ color_name.title() }} ({{ data.katsayi }})
-                                </label>
-                                {% endfor %}
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <h3>Eli Bitiren Oyuncu</h3>
-                            <div class="radio-group">
-                                {% for player in game_data.players %}
-                                <label><input type="radio" name="winning_player" value="{{ player }}" required> {{ player }}</label>
-                                {% endfor %}
-                            </div>
-                        </div>
+                        <div class="control-group"><h3>Okey Rengi</h3><div class="radio-group">{% for color_name, data in okey_data_sorted %}<label style="color: {{ data.color }}; font-weight: bold;"><input type="radio" name="okey_color" value="{{ color_name }}" required> {{ color_name.title() }} ({{ data.katsayi }})</label>{% endfor %}</div></div>
+                        <div class="control-group"><h3>Eli Bitiren Oyuncu</h3><div class="radio-group">{% for player in game_data.players %}<label><input type="radio" name="winning_player" value="{{ player }}" required> {{ player }}</label>{% endfor %}</div></div>
                     </div>
                     <label for="penalty" style="display: block; margin-top: 15px;">Kaybeden Çiftin Sayılar Toplamı:</label>
                     <input type="number" name="penalty_points" id="penalty" placeholder="Örn: 33" required min="0">
-
-                    <!-- DEĞİŞTİ: Özel bitiş checkbox'ları yan yana -->
-                    <div class="special-finish-container">
-                        <label>
-                            <input type="checkbox" name="okey_atildi"> Okey atıldı !!
-                        </label>
-                        <label>
-                            <input type="checkbox" name="cifte_bitildi"> Çifte bitildi !
-                        </label>
-                    </div>
-
+                    <div class="special-finish-container"><label><input type="checkbox" name="okey_atildi"> Okey atıldı !!</label><label><input type="checkbox" name="cifte_bitildi"> Çifte bitildi !</label></div>
                     <button type="submit" class="btn" style="margin-top: 15px;">Eli Kaydet</button>
                 </form>
             {% endif %}
         </div>
-
         <div class="card">
             <h2>Klasik Yazboz</h2>
             <div class="yazboz-sheet">
                 <div class="yazboz-column">
                     <div class="yazboz-header">{{ game_data.team1_name }}</div>
-                    <div class="yazboz-duser-section">
-                        {% for result in game_data.results %}{% if result.kazanan_takim == game_data.team1_name %}<span>{{ result.duser_katsayi }}</span>{% endif %}{% endfor %}
-                    </div>
-                    <div class="yazboz-ceza-section">
-                        {% for result in game_data.results %}{% if result.kazanan_takim == game_data.team1_name %}<p>—</p>{% else %}<p>{{ result.ceza }}</p>{% endif %}{% endfor %}
-                    </div>
+                    <div class="yazboz-duser-section">{% for result in game_data.results %}{% if result.kazanan_takim == game_data.team1_name %}<span>{{ result.duser_katsayi }}</span>{% endif %}{% endfor %}</div>
+                    <div class="yazboz-ceza-section">{% for result in game_data.results %}{% if result.kazanan_takim == game_data.team1_name %}<p>—</p>{% else %}<p>{{ result.ceza }}</p>{% endif %}{% endfor %}</div>
                 </div>
                 <div class="yazboz-column">
                     <div class="yazboz-header">{{ game_data.team2_name }}</div>
-                    <div class="yazboz-duser-section">
-                        {% for result in game_data.results %}{% if result.kazanan_takim == game_data.team2_name %}<span>{{ result.duser_katsayi }}</span>{% endif %}{% endfor %}
-                    </div>
-                    <div class="yazboz-ceza-section">
-                        {% for result in game_data.results %}{% if result.kazanan_takim == game_data.team2_name %}<p>—</p>{% else %}<p>{{ result.ceza }}</p>{% endif %}{% endfor %}
-                    </div>
+                    <div class="yazboz-duser-section">{% for result in game_data.results %}{% if result.kazanan_takim == game_data.team2_name %}<span>{{ result.duser_katsayi }}</span>{% endif %}{% endfor %}</div>
+                    <div class="yazboz-ceza-section">{% for result in game_data.results %}{% if result.kazanan_takim == game_data.team2_name %}<p>—</p>{% else %}<p>{{ result.ceza }}</p>{% endif %}{% endfor %}</div>
                 </div>
             </div>
         </div>
-
         <div class="card">
             <h2>Skor Tablosu</h2>
             <ul class="results-list">
@@ -249,8 +143,11 @@
                 </li>
                 {% for result in game_data.results %}
                 <li>
-                    <span class="col1">{{ result.el }}</span>
-                    <!-- DEĞİŞTİ: Özel bitiş sembolü mantığı güncellendi -->
+                    <span class="col1">
+                        <!-- YENİ: Düzenleme linki eklendi -->
+                        <a href="{{ url_for('edit_hand', hand_index=loop.index0) }}" class="edit-link">✏️</a>
+                        {{ result.el }}
+                    </span>
                     <span class="col2" style="color: {{ OKEY_KATSAYILARI[result.okey].color }};">
                         {{ result.okey.title() }}
                         {% if result.finish_type == 'okey' %}★{% elif result.finish_type == 'cifte' %}&nbsp;(Ç){% endif %}
@@ -269,11 +166,9 @@
                 {{ game_data.team2_name }}: {{ game_data.scores[game_data.team2_name] }}
             </p>
         </div>
-
         <a href="{{ url_for('reset') }}"><button class="btn btn-reset">Yeni Oyun Başlat</button></a>
         {% endif %}
     </div>
-
     <script>
         if (document.getElementById('player1_input')) {
             const p1_input = document.getElementById('player1_input');
