@@ -33,7 +33,6 @@
                         <div class="radio-group">
                             {% for color_name, data in okey_data_sorted %}
                             <label style="color: {{ data.color }}; font-weight: bold;">
-                                <!-- Seçili olanı 'checked' ile işaretle -->
                                 <input type="radio" name="okey_color" value="{{ color_name }}" {% if hand.okey == color_name %}checked{% endif %} required> {{ color_name.title() }} ({{ data.katsayi }})
                             </label>
                             {% endfor %}
@@ -44,7 +43,6 @@
                         <div class="radio-group">
                             {% for player in game_data.players %}
                             <label>
-                                <!-- Seçili olanı 'checked' ile işaretle -->
                                 <input type="radio" name="winning_player" value="{{ player }}" {% if hand.kazanan_oyuncu == player %}checked{% endif %} required> {{ player }}
                             </label>
                             {% endfor %}
@@ -52,17 +50,16 @@
                     </div>
                 </div>
                 <label for="penalty" style="display: block; margin-top: 15px;">Kaybeden Çiftin Sayılar Toplamı:</label>
-                <!-- Mevcut değeri 'value' ile doldur -->
                 <input type="number" name="penalty_points" id="penalty" value="{{ hand.sayilar }}" required min="0">
 
                 <div class="special-finish-container">
                     <label>
-                        <!-- Seçili olanı 'checked' ile işaretle -->
-                        <input type="checkbox" name="okey_atildi" {% if hand.finish_type == 'okey' %}checked{% endif %}> Okey atıldı !!
+                        <!-- DEĞİŞTİ: Etiket kendi kendini kapattı -->
+                        <input type="checkbox" name="okey_atildi" {% if hand.finish_type == 'okey' %}checked{% endif %} /> Okey atıldı !!
                     </label>
                     <label>
-                        <!-- Seçili olanı 'checked' ile işaretle -->
-                        <input type="checkbox" name="cifte_bitildi" {% if hand.finish_type == 'cifte' %}checked{% endif %}> Çifte bitildi !
+                        <!-- DEĞİŞTİ: Etiket kendi kendini kapattı -->
+                        <input type="checkbox" name="cifte_bitildi" {% if hand.finish_type == 'cifte' %}checked{% endif %} /> Çifte bitildi !
                     </label>
                 </div>
 

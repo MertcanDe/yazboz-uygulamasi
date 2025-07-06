@@ -129,12 +129,11 @@ def save_hand():
     session['results'].append(hand_result)
 
     session['current_hand'] += 1
-    recalculate_scores()  # Her el eklendiğinde yeniden hesapla
+    recalculate_scores()
 
     return redirect(url_for('index'))
 
 
-# YENİ: Düzenleme sayfasını gösteren route
 @app.route('/edit/<int:hand_index>')
 def edit_hand(hand_index):
     if 'results' not in session or hand_index >= len(session['results']):
@@ -150,13 +149,11 @@ def edit_hand(hand_index):
                            okey_data_sorted=sorted_okey_data)
 
 
-# YENİ: Düzenlenmiş eli kaydeden route
 @app.route('/update/<int:hand_index>', methods=['POST'])
 def update_hand(hand_index):
     if 'results' not in session or hand_index >= len(session['results']):
         return redirect(url_for('index'))
 
-    # Formdan yeni verileri al
     okey_color = request.form['okey_color']
     penalty_points = int(request.form['penalty_points'])
     winning_player = request.form['winning_player']
@@ -186,7 +183,6 @@ def update_hand(hand_index):
     elif is_cifte_finish:
         finish_type = 'cifte'
 
-    # Yeni el sonucunu oluştur
     updated_hand = {
         "el": hand_index + 1, "okey": okey_color, "kazanan_takim": winner_team,
         "kazanan_oyuncu": winning_player, "duser_katsayi": duser_katsayi_klasik,
@@ -194,10 +190,8 @@ def update_hand(hand_index):
         "finish_type": finish_type
     }
 
-    # Eski elin yerine yenisini koy
     session['results'][hand_index] = updated_hand
 
-    # Tüm skorları yeniden hesapla
     recalculate_scores()
 
     return redirect(url_for('index'))
